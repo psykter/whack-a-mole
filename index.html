@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Whack-A-Mole</title>
+    <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+    <div class="game-area">
+        <div id="score">0</div>
+        <h1>Whack-A-Mole</h1>
+        <div class="holes">
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+            <div class="hole">
+                <div class="mole"></div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var holes = $('.hole');
+            var score = 0;
+            var activeHole = null;
+
+            function getRandomHole() {
+                var inactiveHoles = holes.not(activeHole);
+                var randomIndex = Math.floor(Math.random() * inactiveHoles.length);
+                return inactiveHoles.eq(randomIndex);
+            }
+
+            function showMole() {
+                hideMole(); // Hide the previously active mole, if any
+                activeHole = getRandomHole();
+                activeHole.addClass('active');
+                activeHole.find('.mole').fadeIn();
+
+                // Set a timeout to hide the mole after a certain duration
+                setTimeout(function() {
+                    hideMole();
+                    showMole();
+                }, 1500);
+            }
+
+            function hideMole() {
+                if (activeHole) {
+                    activeHole.removeClass('active');
+                    activeHole.find('.mole').fadeOut();
+                    activeHole = null;
+                }
+            }
+
+            // Call showMole() to display the initial mole
+            showMole();
+
+            // Handle click event on mole
+            $('.hole').on('click', '.mole', function() {
+                if ($(this).parent().hasClass('active')) {
+                    $(this).fadeOut(function() {
+                        score++;
+                        $('#score').text(score);
+                    });
+                    activeHole = null; // Set activeHole to null after successful click
+                }
+            });
+
+            // Set a timer to change the mole's position periodically
+            setInterval(function() {
+                hideMole();
+                showMole();
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
